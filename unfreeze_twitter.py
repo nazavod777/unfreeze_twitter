@@ -100,18 +100,45 @@ class App():
 					pass
 
 			except TimeoutError as error:
+
+				try:
+					driver.quit()
+
+				except:
+					pass
+
 				logger.error(f'{self.cookies_str} | Тайм-аут, пробую еще раз')
 
 			except Exception as error:
+
+				try:
+					driver.quit()
+
+				except:
+					pass
+
 				logger.error(f'{self.cookies_str} | Непредвиденная ошибка: {error}')
 
 			else:
+
+				try:
+					driver.quit()
+
+				except:
+					pass
+
 				with open('cookies.txt', 'a') as file:
 					file.write(f'{self.cookies_str}\n')
 
 				logger.success(f'{self.cookies_str} | Блокировка успешно снята')
 
 				return
+
+		try:
+			driver.quit()
+
+		except:
+			pass
 
 		with open('errors.txt', 'a') as file:
 			file.write(f'{self.cookies_str}\n')
