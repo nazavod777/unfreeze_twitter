@@ -11,6 +11,7 @@ from urllib3 import disable_warnings
 from os import system
 from asyncio import set_event_loop_policy, WindowsSelectorEventLoopPolicy
 from time import sleep
+from selenium.common.exceptions import NoSuchElementException        
 
 if platform == "win32" and (3, 8, 0) <= version_info < (3, 9, 0):
 	set_event_loop_policy(WindowsSelectorEventLoopPolicy())
@@ -82,15 +83,24 @@ class App():
 				driver.get('https://twitter.com/account/access')
 				wait.until(EC.element_to_be_clickable((By.CLASS_NAME, 'Button.EdgeButton.EdgeButton--primary'))).click()
 				
-				for i in range(181):
-					if 'twitter.com/?lang=' in driver.current_url:
-						break
+				try:
+					for i in range(181):
+						driver.find_element(By.CLASS_NAME, "Button.EdgeButton.EdgeButton--primary")
 
-					elif i == 180:
-						raise TimeoutError()
+						if 'twitter.com/?lang=' in driver.current_url:
+							break
 
-					else:
-						sleep(1)
+						elif i == 180:
+							raise TimeoutError()
+
+						else:
+							sleep(1)
+
+				except NoSuchElementException:
+					pass
+
+			except TimeoutError as error:
+				logger.error(f'{self.cookies_str} | Тайм-аут, пробую еще раз')
 
 			except Exception as error:
 				logger.error(f'{self.cookies_str} | Непредвиденная ошибка: {error}')
