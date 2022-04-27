@@ -83,8 +83,8 @@ class App():
 				driver.get('https://twitter.com/account/access')
 				wait.until(EC.element_to_be_clickable((By.CLASS_NAME, 'Button.EdgeButton.EdgeButton--primary'))).click()
 				
-				try:
-					for i in range(181):
+				for i in range(181):
+					try:
 						driver.find_element(By.CLASS_NAME, "Button.EdgeButton.EdgeButton--primary")
 
 						if 'twitter.com/?lang=' in driver.current_url:
@@ -93,11 +93,11 @@ class App():
 						elif i == 180:
 							raise TimeoutError()
 
-						else:
-							sleep(1)
+					except NoSuchElementException:
+						pass
 
-				except NoSuchElementException:
-					pass
+					finally:
+						sleep(1)
 
 			except TimeoutError as error:
 
